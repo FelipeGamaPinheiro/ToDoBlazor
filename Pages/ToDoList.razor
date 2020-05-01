@@ -1,0 +1,73 @@
+﻿@page "/todolist"
+<h2>To Do List</h2>
+<div class="container input-group mb-3 mt-3">
+    <input type="text" class="form-control col-3" placeholder="Nova Tarefa" @bind="newTask">
+    <div class="input-group-append">
+        <button class="btn btn-dark" type="button" @onclick="AddTask">Adicionar</button>
+    </div>
+</div>
+<div class="container">
+    <ul class="list-group input-group">
+        @foreach (var todo in tasks)
+        {
+            if (todo.IsDone == false)
+            {
+                <li class="list-group-item bg-warning mb-1 col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input @bind="todo.IsDone" type="checkbox" aria-label="Checkbox for following text input">
+                            </div>
+                        </div>
+                        <input @bind="todo.Title" type="text" class="form-control" aria-label="Text input with checkbox">
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" @onclick="@(() => { RemoveTask(todo); })">Remover</button>
+                        </div>
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item bg-success mb-1 col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input @bind="todo.IsDone" type="checkbox" aria-label="Checkbox for following text input">
+                            </div>
+                        </div>
+                        <input @bind="todo.Title" type="text" class="form-control" aria-label="Text input with checkbox">
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" @onclick="@(() => { RemoveTask(todo); })">Remover</button>
+                        </div>
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+
+</div>
+
+@code {
+    List<ToDoItem> tasks = new List<ToDoItem>();
+    private string newTask;
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTask))
+        {
+            ToDoItem toDoItem = new ToDoItem()
+            {
+                Title = newTask,
+                IsDone = false
+            };
+            tasks.Add(toDoItem);
+
+            newTask = string.Empty;
+        }
+    }
+
+    private void RemoveTask(ToDoItem todo)
+    {
+        tasks.Remove(todo);
+    }
+}
